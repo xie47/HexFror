@@ -107,11 +107,12 @@ export default class BlockExample extends cc.Component{
     }
     
     onTouchEnd(event: cc.Event.EventTouch) {
-        let addOk = this.game.getComponent(Game).verifySet(this.node, BlockExample.MapEnum[this.mapType], this.colorType);
+        let addOk = this.game.getComponent(Game).verifySet(this.node, this.getMap(), this.colorType);
         this.updateScale(this.scale);
         this.node.setPosition(0,0);
         if (addOk) {
             this.reset();
+            this.game.getComponent(Game).verifyGameOver();
         }
     }
 

@@ -1,11 +1,11 @@
 import Block from "./Block";
+import ScoreFx from "./ScoreFx";
+import BlockExample from "./BlockExample";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Game extends cc.Component {
-
-    private 
 
     @property(cc.Node)
     private canvas: cc.Node = null;
@@ -21,6 +21,9 @@ export default class Game extends cc.Component {
 
     @property
     private blockHigh: number = 0;
+
+    @property([cc.Node])
+    private exampleArray: cc.Node[] = [];
 
     private mapSize: number = 0;
 
@@ -73,6 +76,23 @@ export default class Game extends cc.Component {
 
     }
 
+    verifyGameOver() {
+        for (let node of this.exampleArray) {
+            let map = node.getComponent(BlockExample).getMap();
+            for (let x = 0; x < this.mapSize; x++) {
+                for (let y = 0; y < this.mapSize; y++) {
+                    if (this.blockStatueMap[x][y] == this.BlockStatue.Empty) {
+                        if (this.addBlockVerify(x, y, map)) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        this.showGameOverNode();
+    }
+
     verifySet(node: cc.Node, blockList: cc.Vec2[], colorType): boolean {
         let tarPos = node.convertToWorldSpace(cc.v2(0,0));
         let cenPos = this.canvas.convertToWorldSpace(cc.v2(0,0));
@@ -84,7 +104,7 @@ export default class Game extends cc.Component {
             return false;
         }
         this.addBlock(fromX, fromY, blockList, colorType);
-        this.verifyDel();
+        this.verifyDel(cc.v2(tarPos.x - cenPos.x, tarPos.y - cenPos.y));
         return true;
     }
 
@@ -92,6 +112,9 @@ export default class Game extends cc.Component {
         for (let pos of blockList) {
             let x = fromX + pos.x;
             let y = fromY + pos.y;
+            if (x >= this.mapSize || x < 0 || y >= this.mapSize || y < 0) {
+                return false;
+            }
             if (this.blockStatueMap[x][y] != this.BlockStatue.Empty) {
                 return false;
             }
@@ -108,7 +131,7 @@ export default class Game extends cc.Component {
         }
     }
     
-    verifyDel(): number {
+    private verifyDel(pos: cc.Vec2) {
         let bOk: boolean;
         let delX = [];
         for (let x = 0; x < this.mapSize; x++) {
@@ -165,29 +188,45 @@ export default class Game extends cc.Component {
             }
         }
 
+        let num = 0;
+        let count = 0;
         for (let x of delX) {
+            count++;
             for (let y = 0; y < this.mapSize; y++) {
-                this.setBlockEmpty(x, y);
+                if(this.setBlockEmpty(x, y)) {
+                    num++;
+                }
             }
         }
         for (let y of delY) {
+            count++;
             for (let x = 0; x < this.mapSize; x++) {
-                this.setBlockEmpty(x, y);
+                if(this.setBlockEmpty(x, y)) {
+                    num++;
+                }
             }
         }
         for (let x of delXZ) {
+            count++;
             for (let y = 0; x+y < this.mapSize; y++) {
-                this.setBlockEmpty(x, y);
+                if(this.setBlockEmpty(x, y)) {
+                    num++;
+                }
             }
         }
         for (let y of delYZ) {
+            count++;
             for (let x = 0; x+y < this.mapSize; x++) {
-                this.setBlockEmpty(x, y);
+                if(this.setBlockEmpty(x, y)) {
+                    num++;
+                }
             }
         }
-        return delX.length + delY.length + delXZ.length + delYZ.length;
+        if (num > 0) {
+            this.addScore(pos, num * count);
+        }
     }
-    
+
     private setBlockEmpty(x, y): boolean{
         if (this.blockStatueMap[x][y] == this.BlockStatue.Fill) {
             this.blockStatueMap[x][y] = this.BlockStatue.Empty;
@@ -198,4 +237,59 @@ export default class Game extends cc.Component {
     }
 
 
+    //----------------score-------------------
+    @property(cc.Label)
+    private maxScoreNode: cc.Label = null;
+
+    @property(cc.Label)
+    private curScoreNode: cc.Label = null;
+
+    @property(cc.Prefab)
+    private addScorePrefab: cc.Prefab = null;
+
+    private poolAddScorePrefab: cc.NodePool = null;
+
+    private maxScore = 0;
+    private curScore = 0;
+
+    private addScore(pos: cc.Vec2, change) {
+        this.curScore += change;
+        this.curScoreNode.string = "" + this.curScore;
+        let preNode = this.getAddScorePrefab();
+        preNode.init(this, change, pos);
+    }
+
+    private getAddScorePrefab(): ScoreFx {
+        if (this.poolAddScorePrefab == null) {
+            this.poolAddScorePrefab = new cc.NodePool();
+        }
+        let node = this.poolAddScorePrefab.get();
+        if (node == null) {
+            node = cc.instantiate(this.addScorePrefab);
+        }
+        this.canvas.addChild(node);
+        return node.getComponent(ScoreFx);
+    }
+
+    public removeAddScorePrefab(node) {
+        this.canvas.removeChild(node);
+        this.poolAddScorePrefab.put(node);
+    } 
+
+
+    //---------------------------------------
+
+    //--------------gameOver-------------------
+    @property(cc.Node)
+    private gameOverNode: cc.Node = null;
+
+    private showGameOverNode() {
+        this.gameOverNode.active = true;
+    }
+
+    private hideGameOverNode() {
+        this.gameOverNode.active = false;
+    }
+
+    //---------------------------------------
 }

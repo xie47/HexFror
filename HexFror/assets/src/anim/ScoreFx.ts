@@ -1,4 +1,4 @@
-import Game from "./Game";
+import Game from "../component/Game";
 import ScoreAnim from "./ScoreAnim";
 
 const {ccclass, property} = cc._decorator;

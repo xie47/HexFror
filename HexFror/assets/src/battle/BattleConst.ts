@@ -52,6 +52,14 @@ export class BattleConst {
         return this.BlockStyleEnum[blockStyle];
     }
 
+    static getBlocksWithCenter(blockStyle: number, center:cc.Vec2): cc.Vec2[] {
+        let arr:cc.Vec2[] = [];
+        for (let pos of BattleConst.getBlocks(blockStyle)) {
+            arr.push(cc.v2(pos.x + center.x, pos.y + center.y));
+        }
+        return arr;
+    }
+
     static ActionType = cc.Enum({
         Init : 1,
         Add : 2,

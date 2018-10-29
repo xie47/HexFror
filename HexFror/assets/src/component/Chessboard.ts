@@ -9,7 +9,7 @@ import { BlockConst } from "./BlockConst";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class Game extends cc.Component {
+export default class Chessboard extends cc.Component {
 
     @property(cc.Node)
     private canvas: cc.Node = null;
@@ -42,8 +42,14 @@ export default class Game extends cc.Component {
         this.battle.init(this.sideSize);
         this.initMap();
         for (let styleMap of this.styleMapArray) {
-            styleMap.changeStyle(this.randStyleMap(), this.maskType, this.randColor());
+            styleMap.init(this);
+            this.changeStyleMap(styleMap);
         }
+    }
+
+    changeStyleMap(styleMap: StyleMap) {
+        styleMap.changeStyle(this.randStyleMap(), this.maskType, this.randColor());
+        this.verifyGameOver();
     }
 
     private randStyleMap() {
@@ -104,7 +110,7 @@ export default class Game extends cc.Component {
 
     verifySet(tarWorldPos:cc.Vec2, style:number, color:cc.Color): boolean {
         if (this.bOver) {
-            return;
+            return false;
         }
         let canvasWorldPos = this.canvas.convertToWorldSpace(cc.v2(0,0));
 
@@ -112,16 +118,16 @@ export default class Game extends cc.Component {
 
         let cenPos = BlockConst.calPos(position);
         let changeList = [];
-        let score = this.battle.add(cenPos.x, cenPos.y, style, changeList);
+        let score = this.battle.add(cenPos, style, changeList);
         if (score > 0) {
             for (let pos of changeList) {
                 this.map[pos.x][pos.y].changeBGColor(color);
             }
             this.addScore(position, score);
+            this.verifyDel(position);
+            return true;
         }
-
-        this.verifyDel(position);
-        return true;
+        return false;
     }
     
     private verifyDel(position: cc.Vec2) {
@@ -185,5 +191,33 @@ export default class Game extends cc.Component {
         this.gameOverNode.active = false;
     }
 
+    //---------------------------------------
+    private preShowArray: cc.Vec2[] = [];
+    private centerPos: cc.Vec2 = new cc.Vec2();
+    preShow(tarWorldPos:cc.Vec2, style:number, color:cc.Color) {
+        let canvasWorldPos = this.canvas.convertToWorldSpace(cc.v2(0,0));
+
+        let position = cc.v2(tarWorldPos.x - canvasWorldPos.x, tarWorldPos.y - canvasWorldPos.y);
+
+        let cenPos = BlockConst.calPos(position);
+
+        if (cenPos.x == this.centerPos.x && cenPos.y == this.centerPos.y) {
+            return;
+        }
+        this.centerPos = cenPos;
+        this.preShowClear();
+        if (this.battle.verifyAdd(cenPos, style)) {
+            let blockList = BattleConst.getBlocksWithCenter(style, this.centerPos);
+            for (let pos of blockList) {
+                this.map[pos.x][pos.y].changeBGColor(color);
+                this.preShowArray.push(pos);
+            }
+        }
+    }
+
+    preShowClear() {
+        this.setBlockEmpty(this.preShowArray);
+        this.preShowArray = [];
+    }
     //---------------------------------------
 }

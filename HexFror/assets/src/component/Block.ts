@@ -36,7 +36,8 @@ export default class Block extends cc.Component {
 
     changePos(pos) {
         this.pos = pos;
-        this.node.setPosition(BlockConst.calPosition(pos));
+        let position = BlockConst.calPosition(pos);
+        this.node.setPosition(position);
     }
 
     changeBGColor(color) {

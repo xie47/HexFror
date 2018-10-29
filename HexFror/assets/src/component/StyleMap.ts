@@ -1,13 +1,11 @@
 import Block from "./Block";
-import Game from "./Game";
 import { BattleConst } from "../battle/BattleConst";
+import Chessboard from "./Chessboard";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class StyleMap extends cc.Component{
-    @property(cc.Node) 
-    private game: Game = null;
 
     @property(cc.Node) 
     private canvas: cc.Node = null;
@@ -21,6 +19,7 @@ export default class StyleMap extends cc.Component{
     @property
     private scale: number = 0.8;
 
+    private chessboard: Chessboard = null;
     private blockArray: cc.Node[] = [];
 
     private color: cc.Color;
@@ -29,7 +28,8 @@ export default class StyleMap extends cc.Component{
     private lastEventPos: cc.Vec2 = null;
 
 
-    onLoad() {
+    init(chessboard: Chessboard) {
+        this.chessboard = chessboard;
         for (let i = 0; i < BattleConst.StyleBlockMax; i++) {
             this.blockArray[i] = cc.instantiate(this.blockPre);
         }
@@ -83,13 +83,18 @@ export default class StyleMap extends cc.Component{
     private onTouchMove(event: cc.Event.EventTouch) {
         this.node.setPosition(this.node.position.x + event.getLocation().x - this.lastEventPos.x, this.node.position.y + event.getLocation().y - this.lastEventPos.y);
         this.lastEventPos = event.getLocation();
+        this.chessboard.preShow(this.node.convertToWorldSpace(cc.v2(0,0)), this.getStyle(), this.getColor());
     }
     
     private onTouchEnd(event: cc.Event.EventTouch) {
         //node.convertToWorldSpace(cc.v2(0,0));
-        let addOk = this.game.getComponent(Game).verifySet(this.node.convertToWorldSpace(cc.v2(0,0)), this.getStyle(), this.getColor());
-        this.updateScale(this.scale);
+        this.chessboard.preShowClear();
+        let addOk = this.chessboard.verifySet(this.node.convertToWorldSpace(cc.v2(0,0)), this.getStyle(), this.getColor());
         this.node.setPosition(0,0);
+        this.updateScale(this.scale);
+        if (addOk) {
+            this.chessboard.changeStyleMap(this);
+        }
     }
 
     //-----------------------------------------------------------------------------

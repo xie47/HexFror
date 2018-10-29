@@ -39,7 +39,7 @@ export class Battle {
     public havePosAddStyle(blockStyle: number): boolean {
         for (let x = 0; x < this.mapSize; x++) {
             for (let y = 0; y < this.mapSize; y++) {
-                if (this.isPosBlockEmpty(x, y) && this.verifyAdd(x, y, blockStyle)) {
+                if (this.isPosBlockEmpty(x, y) && this.verifyAdd(cc.v2(x,y), blockStyle)) {
                     return true;
                 }
             }
@@ -47,28 +47,28 @@ export class Battle {
         return  false;
     }
 
-    public verifyAdd(centerX: number, centerY: number, blockStyle: number): boolean {
-        let blockList = BattleConst.getBlocks(blockStyle);
+    public verifyAdd(center: cc.Vec2, blockStyle: number): boolean {
+        let blockList = BattleConst.getBlocksWithCenter(blockStyle, center);
         for (let pos of blockList) {
-            if (!this.isPosBlockEmpty(centerX + pos.x, centerY + pos.y)) {
+            if (!this.isPosBlockEmpty(pos.x, pos.y)) {
                 return false;
             }
         }
         return true;
     }
 
-    public add(centerX: number, centerY: number, blockStyle: number, changeList: cc.Vec2[]): number {
+    public add(center: cc.Vec2, blockStyle: number, changeList: cc.Vec2[]): number {
         let addScore = 0;
-        if (!this.verifyAdd(centerX, centerY, blockStyle)) {
+        if (!this.verifyAdd(center, blockStyle)) {
             return addScore;
         }
 
         let blockNum = 0;
-        this.addAction(new Action(BattleConst.ActionType.Add, blockStyle, cc.v2(centerX, centerY)));
+        this.addAction(new Action(BattleConst.ActionType.Add, blockStyle, center));
 
-        let blockList = BattleConst.getBlocks(blockStyle);
+        let blockList = BattleConst.getBlocksWithCenter(blockStyle, center);
         for (let pos of blockList) {
-            if (this.setBlockFill(centerX + pos.x, centerY + pos.y, changeList)) {
+            if (this.setBlockFill(pos.x, pos.y, changeList)) {
                 blockNum++;
             }
         }
@@ -143,7 +143,7 @@ export class Battle {
         for (let x = 0; x < this.sideSize; x++) {
             bOk = true;
             for (let y = 0; x+y < this.mapSize; y++) {
-                if (this.isPosBlockEmpty(x,y)) {
+                if (this.isPosBlockEmpty(x + y,y)) {
                     bOk = false;
                     break;
                 }
@@ -161,7 +161,7 @@ export class Battle {
         for (let y = 0; y < this.sideSize; y++) {
             bOk = true;
             for (let x = 0; x+y < this.mapSize; x++) {
-                if (this.isPosBlockEmpty(x,y)) {
+                if (this.isPosBlockEmpty(x, x + y)) {
                     bOk = false;
                     break;
                 }
@@ -201,7 +201,7 @@ export class Battle {
         let removeNum = 0;
         for (let x of list) {
             for (let y = 0; x+y < this.mapSize; y++) {
-                if(this.setBlockEmpty(x, y, removeList)) {
+                if(this.setBlockEmpty(x + y, y, removeList)) {
                     removeNum++;
                 }
             }
@@ -213,7 +213,7 @@ export class Battle {
         let removeNum = 0;
         for (let y of list) {
             for (let x = 0; x+y < this.mapSize; x++) {
-                if(this.setBlockEmpty(x, y, removeList)) {
+                if(this.setBlockEmpty(x, x + y, removeList)) {
                     removeNum++;
                 }
             }
@@ -229,7 +229,6 @@ export class Battle {
                 return true;
             }
         }
-        Logger.error("[Battle.setBlockEmpty] x=%d y=%d", x, y);
         return false;
     }
 

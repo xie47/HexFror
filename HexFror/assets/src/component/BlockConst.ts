@@ -1,9 +1,10 @@
+
 export class BlockConst {
-    static Wide: 46;
-    static High: 42;
+    static Wide:number = 46;
+    static High:number = 42;
 
     static MaskEnum = [
-        [new cc.SpriteFrame("assets\\res\\image\\shadow.png")]
+        //[new cc.SpriteFrame("assets\\res\\image\\shadow.png")]
     ];
 
     static ColorEnum = [
@@ -18,7 +19,10 @@ export class BlockConst {
     ];
 
     static calPosition(pos: cc.Vec2): cc.Vec2 {
-        return new cc.Vec2(pos.x * BlockConst.Wide  - pos.y * BlockConst.Wide / 2, pos.y * BlockConst.High);
+        let positon = new cc.Vec2();
+        positon.x = pos.x * BlockConst.Wide  - pos.y * BlockConst.Wide / 2;
+        positon.y = pos.y * BlockConst.High;
+        return positon;
     }
 
     static calPos(positon: cc.Vec2): cc.Vec2 {
@@ -28,3 +32,4 @@ export class BlockConst {
         return pos;
     }
 }
+

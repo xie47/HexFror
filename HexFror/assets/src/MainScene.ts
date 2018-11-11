@@ -1,5 +1,8 @@
-import ColorList from "./component/ColorList";
+import GameStyleBoardList from "./component/GameStyleBoardList";
 import Chessboard from "./component/Chessboard";
+import GameStyle from "./component/GameStyle";
+import { GGameManager } from "./component/GameManager";
+
 
 const {ccclass, property} = cc._decorator;
 
@@ -9,26 +12,50 @@ export default class MainScene extends cc.Component {
     @property(Chessboard)
     private chessboard: Chessboard = null;
 
-    @property(ColorList)
-    private colorList:ColorList = null;
+    @property(GameStyleBoardList)
+    private gameStyleList:GameStyleBoardList = null;
+    private gameStyleListInit = false;
 
-    private curColorStyle: number = 0;
-    private curMaskIndex: number = 0;
+    private curGameStyle: GameStyle;
 
     onLoad() {
-        this.colorList.init(this);
+        GGameManager.load();
     }
 
     showList() {
-        
+        if (!this.gameStyleListInit) {
+            this.gameStyleList.init(this);
+            this.gameStyleListInit = true;
+        }
     }
 
-    changeStyle(color, mask) {
-        this.curColorStyle = color;
-        this.curMaskIndex = mask;
+    changeStyle(style) {
+        this.curGameStyle = style;
     }
 
     startGame() {
-        this.chessboard.startGame(6, this.curMaskIndex, this.curColorStyle);
+        if (this.curGameStyle == null) {
+            this.curGameStyle = GGameManager.gameStyle[1];
+        }
+        this.chessboard.startGame(this, 5, this.curGameStyle);
     }
+
+    
+    //--------------gameOver-------------------
+    gameOver() {
+        this.showGameOverNode();
+    }
+
+    @property(cc.Node)
+    private gameOverNode: cc.Node = null;
+
+    private showGameOverNode() {
+        this.gameOverNode.active = true;
+    }
+
+    private hideGameOverNode() {
+        this.gameOverNode.active = false;
+    }
+
+    //---------------------------------------
 }

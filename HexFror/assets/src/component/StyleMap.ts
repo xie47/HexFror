@@ -1,6 +1,8 @@
-import Block from "./Block";
+
 import { BattleConst } from "../battle/BattleConst";
 import Chessboard from "./Chessboard";
+import Tile from "./Tile";
+import GameStyle from "./GameStyle"; 
 
 const {ccclass, property} = cc._decorator;
 
@@ -8,10 +10,10 @@ const {ccclass, property} = cc._decorator;
 export default class StyleMap extends cc.Component{
 
     @property(cc.Node) 
-    private canvas: cc.Node = null;
+    private board: cc.Node = null;
 
     @property(cc.Prefab)
-    private blockPre: cc.Prefab = null;
+    private TilePre: cc.Prefab = null;
 
     @property
     private style: number = 0;
@@ -20,35 +22,37 @@ export default class StyleMap extends cc.Component{
     private scale: number = 0.8;
 
     private chessboard: Chessboard = null;
-    private blockArray: cc.Node[] = [];
+    private tileArray: cc.Node[] = [];
 
     private color: cc.Color;
-    private maskType: number = 0;
 
     private lastEventPos: cc.Vec2 = null;
 
+    private gameStyle:GameStyle = null
 
-    init(chessboard: Chessboard) {
+
+    init(chessboard: Chessboard, gameStyle:GameStyle) {
         this.chessboard = chessboard;
+        this.gameStyle = gameStyle;
         for (let i = 0; i < BattleConst.StyleBlockMax; i++) {
-            this.blockArray[i] = cc.instantiate(this.blockPre);
+            this.tileArray[i] = cc.instantiate(this.TilePre);
         }
         this.updateScale(this.scale);
         this.addEvent();
     }
 
-    changeStyle(style:number, maskType:number, color: cc.Color) {
+    changeStyle(style:number) {
         this.style = style;
-        this.color = color;
-        this.maskType = maskType;
+        this.color = this.gameStyle.randColor();
 
-        this.canvas.removeAllChildren();
+        this.board.removeAllChildren();
 
         let list = BattleConst.getBlocks(this.style);
         for (let index = 0; index < list.length; ++index) {
-            let block = this.blockArray[index].getComponent(Block);
-            block.init(list[index], this.maskType, this.color);
-            this.canvas.addChild(this.blockArray[index]);
+            let tile = this.tileArray[index].getComponent(Tile);
+            tile.changePos(list[index]);
+            tile.on(this.color);
+            this.board.addChild(this.tileArray[index]);
         }
     }
 
@@ -99,7 +103,7 @@ export default class StyleMap extends cc.Component{
 
     //-----------------------------------------------------------------------------
     updateScale(scale) {
-        this.canvas.scaleX = scale;
-        this.canvas.scaleY = scale;
+        this.board.scaleX = scale;
+        this.board.scaleY = scale;
     }
 }

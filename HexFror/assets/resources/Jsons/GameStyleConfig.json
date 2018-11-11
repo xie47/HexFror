@@ -1,0 +1,8 @@
+{
+	"type":"GameStyleConfig",
+	"data":
+	[
+		{"ID":1,"bg":"Texture/Tile/noise","tile":"Texture/Tile/lighttile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"}
+	],
+	"md5":"196b663a4325a32d8aeddb73435d7381"
+}

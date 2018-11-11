@@ -1,0 +1,31 @@
+{
+  "ver": "2.2.0",
+  "uuid": "93973720-5c2e-4a63-af2c-1d1750ec2cf8",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "subMetas": {
+    "twotile": {
+      "ver": "1.0.3",
+      "uuid": "0fc36f61-484b-47e8-8bc5-5ca62c64c224",
+      "rawTextureUuid": "93973720-5c2e-4a63-af2c-1d1750ec2cf8",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 280,
+      "height": 155,
+      "rawWidth": 280,
+      "rawHeight": 155,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

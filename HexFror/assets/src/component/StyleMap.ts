@@ -36,6 +36,8 @@ export default class StyleMap extends cc.Component{
         this.gameStyle = gameStyle;
         for (let i = 0; i < BattleConst.StyleBlockMax; i++) {
             this.tileArray[i] = cc.instantiate(this.TilePre);
+            let tile = this.tileArray[i].getComponent(Tile);
+            tile.init(gameStyle, cc.v2());
         }
         this.updateScale(this.scale);
         this.addEvent();

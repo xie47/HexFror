@@ -83,7 +83,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "tileOn",
+    "_name": "tileOff",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -155,10 +155,10 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "2bb925fc-ce44-4202-b8df-6a78cbec3b4d"
+      "__uuid__": "983c9e90-1320-485a-b51c-67325069a216"
     },
     "_type": 0,
-    "_sizeMode": 0,
+    "_sizeMode": 1,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -170,7 +170,7 @@
     "_isTrimmedMode": true,
     "_state": 0,
     "_atlas": null,
-    "_id": "a6h1hcNlNFWJtalmjFJzuU"
+    "_id": "6fnezXP1VM0oZZwh0ISQIF"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -180,12 +180,12 @@
     "asset": {
       "__uuid__": "4cde6d93-a440-442a-a55c-7f68b4ed8907"
     },
-    "fileId": "fa4KRWnd9D+6K/RJzbz6X+",
+    "fileId": "afER/WjCtIOpcz6crpINxX",
     "sync": false
   },
   {
     "__type__": "cc.Node",
-    "_name": "tileOff",
+    "_name": "tileOn",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -204,9 +204,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 170,
+      "g": 209,
+      "b": 226,
       "a": 255
     },
     "_contentSize": {
@@ -257,10 +257,10 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "983c9e90-1320-485a-b51c-67325069a216"
+      "__uuid__": "2bb925fc-ce44-4202-b8df-6a78cbec3b4d"
     },
     "_type": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -272,7 +272,7 @@
     "_isTrimmedMode": true,
     "_state": 0,
     "_atlas": null,
-    "_id": "edDcomMh5AjKdU8kPz6+v3"
+    "_id": "87SKipxRFDA6f1zvSan+Qz"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -282,7 +282,7 @@
     "asset": {
       "__uuid__": "4cde6d93-a440-442a-a55c-7f68b4ed8907"
     },
-    "fileId": "afER/WjCtIOpcz6crpINxX",
+    "fileId": "fa4KRWnd9D+6K/RJzbz6X+",
     "sync": false
   },
   {
@@ -374,7 +374,7 @@
     "_isTrimmedMode": true,
     "_state": 0,
     "_atlas": null,
-    "_id": "45dkEGPX5JppxwtRxcKMyx"
+    "_id": "54Dk/wMIhGcL6HwRwvliUZ"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -396,15 +396,15 @@
     },
     "_enabled": true,
     "tileOn": {
-      "__id__": 3
+      "__id__": 6
     },
     "tileOff": {
-      "__id__": 6
+      "__id__": 3
     },
     "light": {
       "__id__": 9
     },
-    "_id": "80OrElBshNR77qklXGEEEk"
+    "_id": "16fklulK1EfK4PuPriyfH7"
   },
   {
     "__type__": "cc.PrefabInfo",

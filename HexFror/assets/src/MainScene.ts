@@ -35,9 +35,9 @@ export default class MainScene extends cc.Component {
 
     startGame() {
         if (this.curGameStyle == null) {
-            this.curGameStyle = GGameManager.gameStyle[1];
+            this.curGameStyle = GGameManager.getGameStyle(1);
         }
-        this.chessboard.startGame(this, 5, this.curGameStyle);
+        this.chessboard.startGame(this, 6, this.curGameStyle);
     }
 
     

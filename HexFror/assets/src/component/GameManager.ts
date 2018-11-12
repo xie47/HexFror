@@ -1,23 +1,28 @@
 import GameStyle from "./GameStyle";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class GameManager{
 
     public static Instance: GameManager = new GameManager();
     private constructor() {
     }
 
-    tileWide:number = 140;
+    private tileWide:number = 140;
 
-    tileHigh:number = 155;
+    private tileHigh:number =140;
 
-    gameStyle: GameStyle[] = [];
+    private gameStyle: GameStyle[] = [];
 
-    jsonMap: Map<string, cc.JsonAsset> = new Map;
+    private jsonMap: Map<string, cc.JsonAsset> = new Map;
 
-    loadState = 0;
+    private loadState = 0;
+
+    getGameStyleAll(): GameStyle[] {
+        return this.gameStyle;
+    }
+
+    getGameStyle(index) {
+        return this.gameStyle[index];
+    }
 
     calPosition(pos: cc.Vec2): cc.Vec2 {
         let positon = new cc.Vec2();
@@ -44,6 +49,7 @@ export default class GameManager{
 
     private loadJson() {
         this.loadState = 1;
+        let thiz = this;
         let array = ["Jsons/GameStyleConfig"];
         cc.loader.loadResArray(array, cc.JsonAsset, function (err, jsonArray) {
             if (err) {
@@ -52,10 +58,10 @@ export default class GameManager{
             }
         
             for (let json of jsonArray) {
-                GGameManager.jsonMap.set(json.json.type, json.json);
+                thiz.jsonMap.set(json.json.type, json.json);
             }
-            GGameManager.init();
-            GGameManager.loadState = 2;
+            thiz.init();
+            thiz.loadState = 2;
         });
     }
 
@@ -63,6 +69,7 @@ export default class GameManager{
         this.loadJson();
         
     }
+    
 }
 
 export const GGameManager = GameManager.Instance;

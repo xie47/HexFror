@@ -24,9 +24,9 @@ export default class GameStyle {
         cc.loader.loadRes(json.bg, cc.SpriteFrame, function(err,spriteFrame){
             _this.bg = spriteFrame;
 　　　　 });
-        cc.loader.loadRes(json.tile, cc.SpriteFrame, function(err,spriteFrame){ 
-            _this.tileOff = new cc.SpriteFrame(spriteFrame, new cc.Rect(0, 0, 140, 155));
-            _this.tileOn = new cc.SpriteFrame(spriteFrame, new cc.Rect(140, 0, 140, 155));
+        cc.loader.loadRes(json.tile, cc.Texture2D, function(err,texture2D){ 
+            _this.tileOff = new cc.SpriteFrame(texture2D, new cc.Rect(0, 0, 140, 155));
+            _this.tileOn = new cc.SpriteFrame(texture2D, new cc.Rect(140, 0, 140, 155));
 　　　　 });
         cc.loader.loadRes(json.light, cc.SpriteFrame, function(err,spriteFrame){ 
             _this.light = spriteFrame;

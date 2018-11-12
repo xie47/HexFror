@@ -2,7 +2,15 @@
 	"type":"GameStyleConfig",
 	"data":
 	[
-		{"ID":1,"bg":"Texture/Tile/noise","tile":"Texture/Tile/lighttile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"}
+		{"ID":1,"bg":"Texture/Tile/noise","tile":"Texture/Tile/lighttile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":2,"bg":"Texture/Tile/noise","tile":"Texture/Tile/whitetile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":3,"bg":"Texture/Tile/noise","tile":"Texture/Tile/twotile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":4,"bg":"Texture/Tile/noise","tile":"Texture/Tile/2tile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":5,"bg":"Texture/Tile/noise","tile":"Texture/Tile/3tile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":6,"bg":"Texture/Tile/noise","tile":"Texture/Tile/4tile","light":"Texture/Tile/lighthighlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":7,"bg":"Texture/Tile/noise","tile":"Texture/Tile/5tile","light":"Texture/Tile/5highlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":8,"bg":"Texture/Tile/grass","tile":"Texture/Tile/6tile","light":"Texture/Tile/6highlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"},
+		{"ID":9,"bg":"Texture/Tile/7texture","tile":"Texture/Tile/7tile","light":"Texture/Tile/7highlight","color0":"#c8c8c8ff","color1":"#345468ff","color2":"#fcf4e9ff","color3":"#f3cfd1ff","color4":"#62a9c7ff","color5":"#aad1e2ff"}
 	],
-	"md5":"196b663a4325a32d8aeddb73435d7381"
+	"md5":"d3cd097ddde735db5f01b92e9afccad2"
 }

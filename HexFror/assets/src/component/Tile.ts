@@ -1,6 +1,5 @@
 import GameStyle from "./GameStyle";
-
-
+import { GGameManager } from "./GameManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -18,13 +17,13 @@ export default class Tile extends cc.Component {
     light: cc.Sprite = null;
 
 
-    init(gameStyle:GameStyle, position) {
+    init(gameStyle:GameStyle, pos) {
         this.tileOn.spriteFrame = gameStyle.tileOn;
         this.tileOff.spriteFrame = gameStyle.tileOff;
         this.tileOff.node.color = gameStyle.offColor;
         this.light.spriteFrame = gameStyle.light;
         this.off();
-        this.changePos(position);
+        this.changePos(pos);
     }
 
     off() { 
@@ -38,7 +37,7 @@ export default class Tile extends cc.Component {
         this.tileOn.node.color = onColor;
     }
 
-    changePos(position) {
-        this.node.setPosition(position);
+    changePos(pos) {
+        this.node.setPosition(GGameManager.calPosition(pos));
     }
 }

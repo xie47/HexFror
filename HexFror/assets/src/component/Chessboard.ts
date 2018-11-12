@@ -38,7 +38,6 @@ export default class Chessboard extends cc.Component {
     private mainScene: MainScene = null;
 
     onLoad() {
-        GGameManager;
         this.battle = new Battle();
     }
     

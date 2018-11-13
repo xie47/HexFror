@@ -1,7 +1,8 @@
-import GameStyleBoardList from "./component/GameStyleBoardList";
-import Chessboard from "./component/Chessboard";
+
+import Game from "./component/Game";
 import GameStyle from "./component/GameStyle";
 import { GGameManager } from "./component/GameManager";
+import GameStyleView from "./component/GameStyleView";
 
 
 const {ccclass, property} = cc._decorator;
@@ -9,53 +10,84 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class MainScene extends cc.Component {
 
-    @property(Chessboard)
-    private chessboard: Chessboard = null;
+    @property(Game)
+    private game: Game = null;
 
-    @property(GameStyleBoardList)
-    private gameStyleList:GameStyleBoardList = null;
-    private gameStyleListInit = false;
+    @property(GameStyleView)
+    private gameStyleView:GameStyleView = null;
+    private gameStyleViewInit = false;
 
     private curGameStyle: GameStyle;
 
+    @property(cc.Node)
+    private mainView: cc.Node = null;
+    @property(cc.Node)
+    private gameView: cc.Node = null;
+    @property(cc.Node)
+    private styleView: cc.Node = null;
+    @property(cc.Node)
+    private rankView: cc.Node = null;
+    @property(cc.Node)
+    private systemView: cc.Node = null;
+
+
     onLoad() {
         GGameManager.load();
-    }
-
-    showList() {
-        if (!this.gameStyleListInit) {
-            this.gameStyleList.init(this);
-            this.gameStyleListInit = true;
-        }
+        this.showMainView();
     }
 
     changeStyle(style) {
         this.curGameStyle = style;
     }
 
-    startGame() {
+    private startGame() {
+        this.game.startGame(this, 5, this.getCurGameStyle());
+    }
+
+    getCurGameStyle() {
         if (this.curGameStyle == null) {
             this.curGameStyle = GGameManager.getGameStyle(1);
         }
-        this.chessboard.startGame(this, 6, this.curGameStyle);
+        return this.curGameStyle;
     }
 
-    
-    //--------------gameOver-------------------
-    gameOver() {
-        this.showGameOverNode();
+    private closeAllView() {
+        this.mainView.active = false;
+        this.gameView.active = false;
+        this.styleView.active = false;
+        this.rankView.active = false;
+        this.systemView.active = false;
     }
 
-    @property(cc.Node)
-    private gameOverNode: cc.Node = null;
-
-    private showGameOverNode() {
-        this.gameOverNode.active = true;
+    showMainView() {
+        this.closeAllView();
+        this.mainView.active = true;
     }
 
-    private hideGameOverNode() {
-        this.gameOverNode.active = false;
+    showGameView() {
+        this.closeAllView();
+        this.gameView.active = true;
+
+        this.startGame();
     }
 
-    //---------------------------------------
+    showStyleView() {
+        this.closeAllView();
+        this.styleView.active = true;
+        
+        if (!this.gameStyleViewInit) {
+            this.gameStyleView.init(this);
+            this.gameStyleViewInit = true;
+        }
+    }
+
+    showRankView() {
+        this.closeAllView();
+        this.rankView.active = true;
+    }
+
+    showSystemView() {
+        this.closeAllView();
+        this.systemView.active = true;
+    }
 }

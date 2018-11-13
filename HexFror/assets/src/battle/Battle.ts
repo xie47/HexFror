@@ -233,7 +233,7 @@ export class Battle {
     }
 
     private isPosValid(x, y): boolean {
-        if (x < 0 || x > this.mapSize || y < 0 || y > this.mapSize) {
+        if (x < 0 || x >= this.mapSize || y < 0 || y >= this.mapSize) {
             return false;
         } 
         return y+this.sideSize > x && x+this.sideSize > y;

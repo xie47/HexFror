@@ -6,7 +6,7 @@ export default class GameManager{
     private constructor() {
     }
 
-    private tileWide:number = 140;
+    private tileWide:number = 150;
 
     private tileHigh:number =140;
 
@@ -24,17 +24,17 @@ export default class GameManager{
         return this.gameStyle[index];
     }
 
-    calPosition(pos: cc.Vec2): cc.Vec2 {
+    calPosition(pos: cc.Vec2, scale): cc.Vec2 {
         let positon = new cc.Vec2();
-        positon.x = pos.x * this.tileWide  - pos.y * this.tileWide / 2;
-        positon.y = pos.y * this.tileHigh;
+        positon.x = (pos.x * this.tileWide  - pos.y * this.tileWide / 2) * scale;
+        positon.y = (pos.y * this.tileHigh) * scale;
         return positon;
     }
 
-    calPos(positon: cc.Vec2): cc.Vec2 {
+    calPos(positon: cc.Vec2, scale): cc.Vec2 {
         let pos = new cc.Vec2();
-        pos.y = positon.y / this.tileHigh + 0.5 | 0;
-        pos.x = (positon.x + pos.y * this.tileWide / 2) / this.tileWide + 0.5 | 0;
+        pos.y = positon.y / (this.tileHigh * scale) + 0.5 | 0;
+        pos.x = (positon.x + pos.y * (this.tileWide * scale) / 2) / (this.tileWide * scale) + 0.5 | 0;
         return pos;
     }
 

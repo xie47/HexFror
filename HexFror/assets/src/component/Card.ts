@@ -1,43 +1,52 @@
-
 import { BattleConst } from "../battle/BattleConst";
-import Chessboard from "./Chessboard";
+import Game from "./Game";
 import Tile from "./Tile";
 import GameStyle from "./GameStyle"; 
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class StyleMap extends cc.Component{
+export default class Card extends cc.Component{
 
     @property(cc.Node) 
     private board: cc.Node = null;
+
+    @property(cc.Node) 
+    private cardNode: cc.Node = null;
+
+    @property(cc.Node) 
+    private lockNode: cc.Node = null;
+
+    @property(cc.Node) 
+    private touchNode: cc.Node = null;
 
     @property(cc.Prefab)
     private TilePre: cc.Prefab = null;
 
     @property
-    private style: number = 0;
-
-    @property
     private scale: number = 0.8;
 
-    private chessboard: Chessboard = null;
+    private style: number = 0;
+
+    private game: Game = null;
     private tileArray: cc.Node[] = [];
 
     private color: cc.Color;
 
     private lastEventPos: cc.Vec2 = null;
 
-    private gameStyle:GameStyle = null
+    private gameStyle:GameStyle = null;
+
+    private bLock = false;
 
 
-    init(chessboard: Chessboard, gameStyle:GameStyle) {
-        this.chessboard = chessboard;
+    init(game: Game, gameStyle:GameStyle) {
+        this.game = game;
         this.gameStyle = gameStyle;
         for (let i = 0; i < BattleConst.StyleBlockMax; i++) {
             this.tileArray[i] = cc.instantiate(this.TilePre);
             let tile = this.tileArray[i].getComponent(Tile);
-            tile.init(gameStyle, cc.v2());
+            tile.init(gameStyle, cc.v2(), this.game.tileScale);
         }
         this.updateScale(this.scale);
         this.addEvent();
@@ -58,6 +67,15 @@ export default class StyleMap extends cc.Component{
         }
     }
 
+    updateLock(bLock) {
+        this.bLock = bLock;
+        this.lockNode.active = bLock;
+    }
+
+    isLock() {
+        return this.bLock;
+    }
+
     getStyle(): number {
         return this.style;
     }
@@ -70,15 +88,15 @@ export default class StyleMap extends cc.Component{
     }
     //-----------------------------------------------------------------------------
     private addEvent() {
-        this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchBegin, this);
-        this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
-        this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
+        this.touchNode.on(cc.Node.EventType.TOUCH_START, this.onTouchBegin, this);
+        this.touchNode.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        this.touchNode.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
     }
 
     private removeEvent() {
-        this.node.off(cc.Node.EventType.TOUCH_START, this.onTouchBegin);
-        this.node.off(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove);
-        this.node.off(cc.Node.EventType.TOUCH_END, this.onTouchEnd);
+        this.touchNode.off(cc.Node.EventType.TOUCH_START, this.onTouchBegin);
+        this.touchNode.off(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove);
+        this.touchNode.off(cc.Node.EventType.TOUCH_END, this.onTouchEnd);
     }
 
     private onTouchBegin(event: cc.Event.EventTouch) {
@@ -87,20 +105,24 @@ export default class StyleMap extends cc.Component{
     }
 
     private onTouchMove(event: cc.Event.EventTouch) {
-        this.node.setPosition(this.node.position.x + event.getLocation().x - this.lastEventPos.x, this.node.position.y + event.getLocation().y - this.lastEventPos.y);
+        this.cardNode.setPosition(this.cardNode.position.x + event.getLocation().x - this.lastEventPos.x, this.cardNode.position.y + event.getLocation().y - this.lastEventPos.y);
         this.lastEventPos = event.getLocation();
-        this.chessboard.preShow(this.node.convertToWorldSpace(cc.v2(0,0)), this.getStyle(), this.getColor());
+        this.game.preShow(this.board.convertToWorldSpace(cc.v2(0,0)), this.getStyle(), this.getColor());
     }
     
     private onTouchEnd(event: cc.Event.EventTouch) {
-        //node.convertToWorldSpace(cc.v2(0,0));
-        this.chessboard.preShowClear();
-        let addOk = this.chessboard.verifySet(this.node.convertToWorldSpace(cc.v2(0,0)), this.getStyle(), this.getColor());
-        this.node.setPosition(0,0);
+        this.game.preShowClear();
+        let addOk = this.game.verifySet(this.board.convertToWorldSpace(cc.v2(0,0)), this.getStyle(), this.getColor());
+        this.cardNode.setPosition(0,0);
         this.updateScale(this.scale);
         if (addOk) {
-            this.chessboard.changeStyleMap(this);
+            this.refreshStyle();
         }
+    }
+
+    private refreshStyle() {
+        this.game.resetCard(this);
+        this.game.verifyGameOver();
     }
 
     //-----------------------------------------------------------------------------

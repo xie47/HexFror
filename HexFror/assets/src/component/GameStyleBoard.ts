@@ -1,7 +1,7 @@
 
-import MainScene from "../MainScene";
 import Tile from "./Tile";
 import GameStyle from "./GameStyle";
+import GameStyleView from "./GameStyleView";
 
 const {ccclass, property} = cc._decorator;
 
@@ -21,27 +21,31 @@ export default class GameStyleBoard extends cc.Component {
 
     private tileNodeArray: cc.Node[] = [];
 
-    private game:MainScene = null;
+    private gameStyleView: GameStyleView = null;
     private gameStyle : GameStyle;
 
-    init(game:MainScene, style:GameStyle) {
-        this.game = game;
+    init(gameStyleView:GameStyleView, style:GameStyle) {
+        this.gameStyleView = gameStyleView;
         this.gameStyle = style;
         this.bg.spriteFrame = this.gameStyle.bg;
+        
+        this.board.removeAllChildren();
         for (let i = 0; i < this.tilePos.length; i++) {
             this.tileNodeArray[i] = cc.instantiate(this.tilePre);
             let tile = this.tileNodeArray[i].getComponent(Tile);
-            tile.init(this.gameStyle, this.tilePos[i]);
+            tile.init(this.gameStyle, this.tilePos[i], 1);
             if (i > 0 && i <= this.gameStyle.colorArray.length) {
                 tile.on(this.gameStyle.colorArray[i-1]);
             }
             this.board.addChild(this.tileNodeArray[i]);
         }
-        this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
+        if (gameStyleView != null) {
+            this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
+        }
     }
 
     onTouchEnd(){
-        this.game.changeStyle(this.gameStyle);
+        this.gameStyleView.changeGameStyle(this.gameStyle);
     }
 
     onDestroy() {

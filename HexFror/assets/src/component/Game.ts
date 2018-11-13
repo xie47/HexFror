@@ -1,5 +1,3 @@
-
-import StyleMap from "./StyleMap";
 import { Battle } from "../battle/Battle";
 import { BattleConst } from "../battle/BattleConst";
 import ScoreFx from "../anim/ScoreFx";
@@ -7,25 +5,37 @@ import Tile from "./Tile";
 import GameStyle from "./GameStyle";
 import MainScene from "../MainScene";
 import { GGameManager } from "./GameManager";
+import Card from "./Card";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class Chessboard extends cc.Component {
-
-    @property(cc.Node)
-    private board: cc.Node = null;
+export default class Game extends cc.Component {
 
     @property(cc.Sprite)
     private bg: cc.Sprite = null;
 
+    @property(cc.Node)
+    private board: cc.Node = null;
+
+    @property(cc.Node)
+    private cardList: cc.Node = null;
+    
+    @property(cc.Node)
+    private gameOverNode: cc.Node = null;
+
     @property(cc.Prefab)
     private tilePre: cc.Prefab = null;
 
-    @property([StyleMap])
-    private styleMapArray: StyleMap[] = [];
+    @property(cc.Prefab)
+    private cardPre: cc.Prefab = null;
+
+    @property
+    tileScale:number = 0.5;
 
     private map: Tile[][] = null;
+
+    private cardArray: Card[] = [null];
 
     private sideSize: number = 5;
 
@@ -39,6 +49,12 @@ export default class Chessboard extends cc.Component {
 
     onLoad() {
         this.battle = new Battle();
+        this.cardArray = [];
+        for (let i = 0; i < 3; i++) {
+            let card = cc.instantiate(this.cardPre);
+            this.cardArray[i] = card.getComponent(Card);
+            this.cardList.addChild(card);
+        }
     }
     
     startGame (mainScene:MainScene, sideSize, style:GameStyle) {
@@ -55,13 +71,11 @@ export default class Chessboard extends cc.Component {
 
     
     private init() {
+        this.updateGameOverView(false);
         this.battle.init(this.sideSize);
         this.bg.spriteFrame = this.gameStyle.bg;
         this.initMap();
-        for (let styleMap of this.styleMapArray) {
-            styleMap.init(this, this.gameStyle);
-            this.changeStyleMap(styleMap);
-        }
+        this.initCardList();
     }
 
     private initMap() {
@@ -72,7 +86,7 @@ export default class Chessboard extends cc.Component {
             for (let y = 0; y < this.battle.map[x].length; y++) {
                 if (this.battle.map[x][y] != BattleConst.BlockStatue.Nil) {
                     let tile = cc.instantiate(this.tilePre);
-                    tile.getComponent(Tile).init(this.gameStyle, new cc.Vec2(x, y));
+                    tile.getComponent(Tile).init(this.gameStyle, new cc.Vec2(x, y), this.tileScale);
                     this.board.addChild(tile);
                     this.map[x][y] = tile.getComponent(Tile);
                 }
@@ -80,43 +94,49 @@ export default class Chessboard extends cc.Component {
         }
     }
 
-    changeStyleMap(styleMap: StyleMap) {
-        styleMap.changeStyle(this.randStyleMap());
+    private initCardList() {
+        for (let card of this.cardArray) {
+            card.init(this, this.gameStyle);
+            this.resetCard(card);
+        }
+    }
+
+    resetCard(card: Card) {
+        card.changeStyle(this.randCardType());
         this.verifyGameOver();
     }
 
-    private randStyleMap() {
+    private randCardType() {
         let length = BattleConst.BlockStyleEnum.length;
         return Math.random() * (length - 1) | 0;
     }
 
 
     verifyGameOver() {
-        for (let styleMap of this.styleMapArray) {
-            if (this.battle.havePosAddStyle(styleMap.getStyle())) {
-                return;
+        let bOver = true;
+        for (let card of this.cardArray) {
+            let add = this.battle.havePosAddStyle(card.getStyle())
+            card.updateLock(!add);
+            if (add) {
+                bOver = false;
             }
         }
-        this.mainScene.gameOver();
+        this.updateGameOverView(bOver);
     }
 
     verifySet(tarWorldPos:cc.Vec2, style:number, color:cc.Color): boolean {
         if (this.bOver) {
             return false;
         }
-        let canvasWorldPos = this.board.convertToWorldSpace(cc.v2(0,0));
-
-        let position = cc.v2(tarWorldPos.x - canvasWorldPos.x, tarWorldPos.y - canvasWorldPos.y);
-
-        let cenPos = GGameManager.calPos(position);
+        let cenPos = this.getCenterPos(tarWorldPos);
         let changeList = [];
         let score = this.battle.add(cenPos, style, changeList);
         if (score > 0) {
             for (let pos of changeList) {
                 this.map[pos.x][pos.y].on(color);
             }
-            this.addScore(position, score);
-            this.verifyDel(position);
+            this.addScore(tarWorldPos, score);
+            this.verifyDel(tarWorldPos);
             return true;
         }
         return false;
@@ -174,12 +194,7 @@ export default class Chessboard extends cc.Component {
     private preShowArray: cc.Vec2[] = [];
     private centerPos: cc.Vec2 = new cc.Vec2();
     preShow(tarWorldPos:cc.Vec2, style:number, color:cc.Color) {
-        let canvasWorldPos = this.board.convertToWorldSpace(cc.v2(0,0));
-
-        let position = cc.v2(tarWorldPos.x - canvasWorldPos.x, tarWorldPos.y - canvasWorldPos.y);
-
-        let cenPos = GGameManager.calPos(position);
-
+        let cenPos = this.getCenterPos(tarWorldPos);
         if (cenPos.x == this.centerPos.x && cenPos.y == this.centerPos.y) {
             return;
         }
@@ -198,5 +213,17 @@ export default class Chessboard extends cc.Component {
         this.setBlockEmpty(this.preShowArray);
         this.preShowArray = [];
     }
+    //---------------------------------------
+    private getCenterPos(tarWorldPos:cc.Vec2) {
+        let canvasWorldPos = this.board.convertToWorldSpace(cc.v2(0,0));
+        let position = cc.v2(tarWorldPos.x - canvasWorldPos.x, tarWorldPos.y - canvasWorldPos.y);
+
+        return GGameManager.calPos(position, this.tileScale);
+    }
+
+    updateGameOverView(bOver) {
+        this.gameOverNode.active = bOver;
+    }
+
     //---------------------------------------
 }

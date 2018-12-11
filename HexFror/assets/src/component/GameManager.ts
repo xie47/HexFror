@@ -1,4 +1,5 @@
 import GameStyle from "./GameStyle";
+import MainScene from "../MainScene";
 
 export default class GameManager{
 
@@ -15,6 +16,8 @@ export default class GameManager{
     private jsonMap: Map<string, cc.JsonAsset> = new Map;
 
     private loadState = 0;
+
+    private game: MainScene = null;
 
     getGameStyleAll(): GameStyle[] {
         return this.gameStyle;
@@ -62,12 +65,17 @@ export default class GameManager{
             }
             thiz.init();
             thiz.loadState = 2;
+            thiz.game.onLoadOk();
         });
     }
 
-    load() {
+    load(game:MainScene) {
+        this.game = game;
         this.loadJson();
-        
+    }
+
+    loadOk() {
+        return this.loadState == 2;
     }
     
 }

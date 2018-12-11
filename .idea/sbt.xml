@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaSbtSettings">
+    <option name="customLauncherEnabled" value="true" />
+    <option name="customLauncherPath" value="D:\Tool\sbt\bin\sbt-launch.jar" />
+    <option name="linkedExternalProjectsSettings">
+      <SbtProjectSettings>
+        <option name="externalProjectPath" value="D:\code\HexFror\Server" />
+      </SbtProjectSettings>
+    </option>
+    <option name="vmParameters" value="-Xmx512M -Dsbt.log.format=true -Dsbt.global.base=D:/tool/sbt/.sbt -Dsbt.ivy.home=D:/tool/sbt/.ivy2 -Dsbt.boot.directory=D:/tool/.sbt/boot/ -Dsbt.repository.config=D:/tool/sbt/conf/repo.properties" />
+  </component>
+</project>

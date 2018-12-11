@@ -100,7 +100,7 @@ export default class Card extends cc.Component{
     }
 
     private onTouchBegin(event: cc.Event.EventTouch) {
-        this.updateScale(1);
+        this.updateScale(0.9);
         this.lastEventPos = event.getLocation();
     }
 
